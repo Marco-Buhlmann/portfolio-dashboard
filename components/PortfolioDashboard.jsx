@@ -270,12 +270,12 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
             {/* Funding Rounds */}
             <div className="mb-6">
               <div className="data-section-header px-4 py-3">
-                <p className="text-gray-300 font-bold">Current Price Data</p>
+                <p className="text-gray-300 font-bold">PSS ($) By Funding Round</p>
               </div>
-              <div className="grid grid-cols-2">
+              <div className="grid grid-cols-1">
                 {holding.fundingRounds && holding.fundingRounds.map((round, idx) => (
                   <div key={idx} className="data-grid-cell p-4 flex justify-between">
-                    <span className="text-gray-300">{round.round}:</span>
+                    <span className="text-gray-300">- {round.round}</span>
                     <span className="text-white font-semibold">${round.pss.toFixed(2)}</span>
                   </div>
                 ))}
