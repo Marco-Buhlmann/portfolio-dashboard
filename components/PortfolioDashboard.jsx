@@ -11,7 +11,7 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
       {
         id: 1,
         security: 'Laundry Sauce',
-        unitsHeld: 1400,
+        unitsHeld: 9370,
         issuePrice: 1.5,
         currentPrice: 6.94,
         totalInvested: 2100,
@@ -71,7 +71,7 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
   const valuationData = holding.valuationHistory || [];
 
   return (
-    <div 
+    <div
       className="min-h-screen bg-black text-white p-8 lg:p-12"
       style={{
         backgroundImage: 'url(/palm-noir.jpg)',
@@ -253,7 +253,7 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
           {/* Additional Details */}
           <div>
             <h2 className="section-title mb-6">ADDITIONAL DETAILS</h2>
-            
+
             {/* Current Price Data */}
             <div className="mb-6">
               <div className="data-section-header px-4 py-3 mb-0">
@@ -304,7 +304,7 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
           {/* Performance Charts */}
           <div>
             <h2 className="section-title mb-6">PERFORMANCE</h2>
-            
+
             {/* Bar Chart */}
             <div className="mb-8">
               <ResponsiveContainer width="100%" height={250}>
@@ -312,9 +312,9 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
                   <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                   <XAxis dataKey="name" stroke="#999" />
                   <YAxis stroke="#999" />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: '#1a1a1a', 
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#1a1a1a',
                       border: '1px solid #333',
                       borderRadius: '8px'
                     }}
@@ -332,20 +332,20 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
                 <LineChart data={valuationData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                   <XAxis dataKey="year" stroke="#999" />
-                  <YAxis stroke="#999" tickFormatter={(v) => `${(v/1000).toFixed(0)}K`} />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: '#1a1a1a', 
+                  <YAxis stroke="#999" tickFormatter={(v) => `${(v / 1000).toFixed(0)}K`} />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#1a1a1a',
                       border: '1px solid #333',
                       borderRadius: '8px'
                     }}
                     formatter={(value) => [`$${value.toLocaleString()}`, 'Valuation (M$)']}
                   />
                   <Legend />
-                  <Line 
-                    type="monotone" 
-                    dataKey="value" 
-                    stroke="#FF4D6D" 
+                  <Line
+                    type="monotone"
+                    dataKey="value"
+                    stroke="#FF4D6D"
                     strokeWidth={2}
                     dot={{ fill: '#FF4D6D', r: 4 }}
                     name="Valuation (M$)"
