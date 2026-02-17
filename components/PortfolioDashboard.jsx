@@ -185,8 +185,14 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
         <div className="flex justify-between items-start mb-8">
           <h1 className="section-title">PORTFOLIO DETAILS</h1>
           <div className="text-right">
-            <span className="text-white font-semibold text-lg">Last Updated: </span>
-            <span className="text-white italic text-lg">{new Date().toLocaleDateString()}</span>
+            <div>
+              <span className="text-white font-semibold text-lg">Last Updated: </span>
+              <span className="text-white italic text-lg">{new Date().toLocaleDateString()}</span>
+            </div>
+            <div>
+              <span className="text-white font-semibold text-lg">Account: </span>
+              <span className="text-white italic text-lg">{displayData.investor}</span>
+            </div>
           </div>
         </div>
 
