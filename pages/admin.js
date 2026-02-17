@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchAllRecords, createRecord, updateRecord, deleteRecord } from '../lib/airtable';
 
 const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || '612501';
+const SITE_URL = 'https://dashboard.3cubed.vc';
 
 const AdminDashboard = () => {
   const [authenticated, setAuthenticated] = useState(false);
@@ -11,6 +12,7 @@ const AdminDashboard = () => {
   const [error, setError] = useState(null);
   const [editingRecord, setEditingRecord] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [copiedId, setCopiedId] = useState(null);
   const [formData, setFormData] = useState({
     investorName: '',
     security: '',
@@ -122,6 +124,15 @@ const AdminDashboard = () => {
       setError(err.message);
     }
     setLoading(false);
+  };
+
+  const copyEmbedCode = (investorName) => {
+    const encodedName = encodeURIComponent(investorName);
+    const embedCode = `<iframe src="${SITE_URL}/${encodedName}" width="100%" height="800" frameborder="0" style="border:none;"></iframe>`;
+    navigator.clipboard.writeText(embedCode).then(() => {
+      setCopiedId(investorName);
+      setTimeout(() => setCopiedId(null), 2000);
+    });
   };
 
   if (!authenticated) {
@@ -415,10 +426,17 @@ const AdminDashboard = () => {
                     <td className="p-3" style={{ borderBottom: '1px solid rgba(179, 222, 178, 0.2)' }}>
                       <button
                         onClick={() => handleEdit(record)}
-                        className="text-white text-sm py-1 px-3 rounded-lg mr-2 transition hover:opacity-80"
+                        className="text-white text-sm py-1 px-3 rounded-lg mr-1 transition hover:opacity-80"
                         style={{ backgroundColor: 'rgba(179, 222, 178, 0.3)', border: '1px solid #B3DEB2' }}
                       >
                         Edit
+                      </button>
+                      <button
+                        onClick={() => copyEmbedCode(record.investorName)}
+                        className="text-white text-sm py-1 px-3 rounded-lg mr-1 transition hover:opacity-80"
+                        style={{ backgroundColor: 'rgba(100, 150, 255, 0.3)', border: '1px solid #6496FF' }}
+                      >
+                        {copiedId === record.investorName ? 'Copied!' : 'Embed'}
                       </button>
                       <button
                         onClick={() => handleDelete(record.id)}
