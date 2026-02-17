@@ -301,14 +301,14 @@ const AdminDashboard = () => {
                   </div>
                   <div className="col-span-2">
                     <label className="block text-gray-400 text-sm mb-1">
-                      Valuation History <span className="text-gray-500">(format: Year 1: 2.5, Year 2: 4.1)</span>
+                      Valuation History <span className="text-gray-500">(format: 2023: 10, 2024: 15, 2025: 25)</span>
                     </label>
                     <input
                       type="text"
                       name="valuationHistory"
                       value={formData.valuationHistory}
                       onChange={handleInputChange}
-                      placeholder="Year 1: 2.5, Year 2: 4.1, Year 3: 5.8"
+                      placeholder="2023: 10, 2024: 15, 2025: 25"
                       className="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-green-500 focus:outline-none"
                     />
                   </div>
