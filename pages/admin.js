@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fetchAllRecords, createRecord, updateRecord, deleteRecord } from '../lib/airtable';
 
-const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123';
+const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || '612501';
 
 const AdminDashboard = () => {
   const [authenticated, setAuthenticated] = useState(false);
