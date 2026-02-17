@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { TrendingUp, DollarSign, Briefcase, ChevronDown, ChevronUp } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 const PortfolioDashboard = ({ initialData, investorName }) => {
   const [data, setData] = useState(initialData);
   const [loading, setLoading] = useState(!initialData);
-  const [expandedHolding, setExpandedHolding] = useState(null);
 
   const mockData = {
     investor: investorName || '[Investor Name]',
     holdings: [
       {
         id: 1,
-        security: 'Laundry Sauce Inc.',
-        unitsHeld: 9370,
+        security: 'Laundry Sauce',
+        unitsHeld: 1400,
         issuePrice: 1.5,
         currentPrice: 6.94,
-        totalInvested: 14055,
+        totalInvested: 2100,
+        unitsSold: null,
+        redemptionPrice: null,
         valuationHistory: [
-          { year: 'Year 1', value: 2.5 },
-          { year: 'Year 2', value: 4.1 },
-          { year: 'Year 3', value: 5.8 },
-          { year: 'Year 4', value: 6.94 }
+          { year: '2021', value: 10000 },
+          { year: '2022', value: 15000 },
+          { year: '2023', value: 25000 },
+          { year: '2024', value: 45000 },
+          { year: '2025', value: 70000 },
         ],
         fundingRounds: [
           { round: 'Seed', pss: 0.55 },
@@ -32,9 +33,9 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
       }
     ],
     totals: {
-      totalInvested: 14055,
-      totalCurrentValue: 65027.8,
-      totalGainLoss: 50972.8,
+      totalInvested: 2100,
+      totalCurrentValue: 9716,
+      totalGainLoss: 7616,
       totalGainLossPercent: 362.6,
     },
   };
@@ -50,259 +51,330 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
-        <div className="w-12 h-12 border-2 border-slate-300 border-t-slate-900 rounded-full animate-spin"></div>
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="w-12 h-12 border-2 border-gray-600 border-t-white rounded-full animate-spin"></div>
       </div>
     );
   }
 
   const displayData = data || mockData;
-  const { holdings, totals } = displayData;
-  const totalGainLossClass = totals.totalGainLoss >= 0 ? 'text-emerald-600' : 'text-red-600';
+  const holding = displayData.holdings[0];
+  const currentValue = holding.unitsHeld * holding.currentPrice;
+  const gainLoss = currentValue - holding.totalInvested;
+  const returnPercent = holding.totalInvested > 0 ? (gainLoss / holding.totalInvested) * 100 : 0;
+  const multiple = holding.issuePrice > 0 ? (holding.currentPrice / holding.issuePrice).toFixed(2) : 0;
 
-  const toggleHolding = (id) => {
-    setExpandedHolding(expandedHolding === id ? null : id);
-  };
+  const barChartData = [
+    { name: 'Investment', 'Total Invested ($)': holding.totalInvested, 'FMV ($)': currentValue }
+  ];
+
+  const valuationData = holding.valuationHistory || [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 p-6 lg:p-8">
+    <div 
+      className="min-h-screen bg-black text-white p-8 lg:p-12"
+      style={{
+        backgroundImage: 'url(/palm-noir.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+      }}
+    >
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
         
-        body {
-          font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
-        }
-        
-        .font-mono {
-          font-family: 'Geist Mono', monospace;
+        * {
+          font-family: 'Open Sans', sans-serif;
         }
 
-        @keyframes slideUp {
-          from { opacity: 0; transform: translateY(16px); }
-          to { opacity: 1; transform: translateY(0); }
+        .glass-card {
+          background: linear-gradient(
+            0deg, 
+            rgba(255, 255, 255, 0.05) 0%, 
+            rgba(255, 255, 255, 0.05) 100%
+          ), linear-gradient(
+            0deg, 
+            rgba(71, 56, 47, 0.10) 0%, 
+            rgba(255, 255, 255, 0.25) 100%
+          );
+          box-shadow: 
+            -3px 3px 9px rgba(128, 83, 66, 0.60) inset,
+            3px 3px 6px -1.5px rgba(255, 255, 255, 0.30) inset,
+            -4px -12px 15px rgba(255, 255, 255, 0.20) inset,
+            1.5px 0px 3px rgba(255, 255, 255, 0.20) inset,
+            -1.5px -1.5px 6px rgba(255, 255, 255, 0.30) inset,
+            24px 47px 71px -12px rgba(74, 74, 74, 0.25),
+            3px 6px 24px rgba(0, 0, 0, 0.05);
+          border-radius: 24px;
+          border: 1px solid rgba(255, 255, 255, 0.05);
+          backdrop-filter: blur(10px);
         }
 
-        .animate-slide-up {
-          animation: slideUp 0.5s ease-out forwards;
+        .section-title {
+          color: #B3DEB2;
+          font-size: 28px;
+          font-weight: 600;
+          letter-spacing: 0.1em;
         }
 
-        .stagger-1 { animation-delay: 0.1s; }
-        .stagger-2 { animation-delay: 0.2s; }
-        .stagger-3 { animation-delay: 0.3s; }
-        .stagger-4 { animation-delay: 0.4s; }
-
-        .card {
-          background: white;
-          border: 1px solid #e2e8f0;
-          border-radius: 12px;
-          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .card:hover {
-          border-color: #cbd5e1;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-        }
-
-        .metric-value {
-          font-size: clamp(1.5rem, 5vw, 2.5rem);
+        .security-name {
+          color: #FE0C7F;
+          font-size: 20px;
           font-weight: 700;
-          letter-spacing: -0.02em;
-        }
-
-        .metric-value-sm {
-          font-size: clamp(1.25rem, 4vw, 1.75rem);
-          font-weight: 700;
-          letter-spacing: -0.02em;
         }
 
         .metric-label {
-          font-size: 0.875rem;
-          font-weight: 500;
-          color: #64748b;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
+          color: #F5F5F5;
+          font-size: 14px;
+          font-weight: 400;
         }
 
-        .badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 4px 10px;
-          background: #f1f5f9;
-          border-radius: 6px;
-          font-size: 0.75rem;
-          font-weight: 600;
+        .metric-value {
+          color: #F5F5F5;
+          font-size: 24px;
+          font-weight: 700;
+        }
+
+        .data-table {
+          background: rgba(255, 255, 255, 0);
+          border: 1px solid rgba(0, 0, 0, 0.5);
+          box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        }
+
+        .divider {
+          height: 1px;
+          background: rgba(255, 255, 255, 0.4);
+          opacity: 0.5;
+        }
+
+        .vertical-divider {
+          width: 1px;
+          background: rgba(255, 255, 255, 0.4);
+          opacity: 0.5;
         }
       `}</style>
 
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8 animate-slide-up stagger-1">
-          <h1 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-2">Portfolio</h1>
-          <p className="text-slate-500">{displayData.investor}</p>
+        <div className="flex justify-between items-start mb-8">
+          <h1 className="section-title">PORTFOLIO DETAILS</h1>
+          <div className="text-right">
+            <span className="text-white font-semibold text-lg">Last Updated: </span>
+            <span className="text-white italic text-lg">{new Date().toLocaleDateString()}</span>
+          </div>
         </div>
 
-        {/* Portfolio Summary */}
-        <div className="mb-8 animate-slide-up stagger-2">
-          <div className="card p-6 lg:p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-3 bg-slate-100 rounded-lg">
-                <Briefcase className="w-6 h-6 text-slate-600" />
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold text-slate-900">Portfolio Summary</h2>
-                <p className="text-sm text-slate-500">{holdings.length} holding{holdings.length !== 1 ? 's' : ''}</p>
-              </div>
+        <div className="divider mb-8"></div>
+
+        {/* Details Section */}
+        <div className="mb-8">
+          <div className="flex items-center gap-4 mb-6">
+            <div>
+              <p className="text-gray-300 text-sm">DETAILS</p>
+              <p className="text-gray-300 text-sm">Security:</p>
             </div>
-            
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-              <div>
-                <p className="metric-label mb-2">Total Invested</p>
-                <p className="metric-value text-slate-900 font-mono">${totals.totalInvested.toLocaleString()}</p>
-              </div>
-              <div>
-                <p className="metric-label mb-2">Current Value</p>
-                <p className="metric-value text-slate-900 font-mono">${totals.totalCurrentValue.toLocaleString()}</p>
-              </div>
-              <div>
-                <p className="metric-label mb-2">Total Gain/Loss</p>
-                <p className={`metric-value font-mono ${totalGainLossClass}`}>
-                  ${totals.totalGainLoss.toLocaleString()}
-                </p>
-              </div>
-              <div>
-                <p className="metric-label mb-2">Return</p>
-                <p className={`metric-value font-mono ${totalGainLossClass}`}>
-                  {totals.totalGainLossPercent.toFixed(1)}%
-                </p>
-              </div>
+            <div className="vertical-divider h-12"></div>
+            <p className="security-name">{holding.security}</p>
+          </div>
+        </div>
+
+        {/* Main Metrics Row 1 */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-4">
+          <div>
+            <p className="metric-label mb-2">Units Held</p>
+            <div className="glass-card px-6 py-4 text-center">
+              <p className="metric-value">{holding.unitsHeld.toLocaleString()}</p>
+            </div>
+          </div>
+          <div>
+            <p className="metric-label mb-2">Issue Price Unit / ($)</p>
+            <div className="glass-card px-6 py-4 text-center">
+              <p className="metric-value">${holding.issuePrice.toFixed(2)}</p>
+            </div>
+          </div>
+          <div>
+            <p className="metric-label mb-2">Total Invested ($)</p>
+            <div className="glass-card px-6 py-4 text-center">
+              <p className="metric-value">${holding.totalInvested.toLocaleString()}</p>
+            </div>
+          </div>
+          <div>
+            <p className="metric-label mb-2">FMV ($)</p>
+            <div className="glass-card px-6 py-4 text-center">
+              <p className="metric-value">${currentValue.toLocaleString()}</p>
+            </div>
+          </div>
+          <div>
+            <p className="metric-label mb-2">Return (%)</p>
+            <div className="glass-card px-6 py-4 text-center">
+              <p className="metric-value">{returnPercent.toFixed(1)}%</p>
+            </div>
+          </div>
+          <div>
+            <p className="metric-label mb-2">Multiple</p>
+            <div className="glass-card px-6 py-4 text-center">
+              <p className="metric-value">{multiple}x</p>
             </div>
           </div>
         </div>
 
-        {/* Holdings */}
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold text-slate-900 mb-4">Holdings</h2>
-          <div className="space-y-4">
-            {holdings.map((holding, index) => {
-              const currentValue = holding.unitsHeld * holding.currentPrice;
-              const gainLoss = currentValue - holding.totalInvested;
-              const gainLossPercent = holding.totalInvested > 0 ? (gainLoss / holding.totalInvested) * 100 : 0;
-              const gainLossClass = gainLoss >= 0 ? 'text-emerald-600' : 'text-red-600';
-              const isExpanded = expandedHolding === holding.id;
+        {/* Main Metrics Row 2 */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
+          <div>
+            <p className="metric-label mb-2">Units Sold</p>
+            <div className="glass-card px-6 py-4 text-center">
+              <p className="metric-value">{holding.unitsSold || '-'}</p>
+            </div>
+          </div>
+          <div>
+            <p className="metric-label mb-2">RP ($)</p>
+            <div className="glass-card px-6 py-4 text-center">
+              <p className="metric-value">{holding.redemptionPrice ? `$${holding.redemptionPrice}` : '-'}</p>
+            </div>
+          </div>
+        </div>
 
-              return (
-                <div key={holding.id} className={`card animate-slide-up`} style={{ animationDelay: `${0.1 * (index + 3)}s` }}>
-                  {/* Holding Header - Clickable */}
-                  <div 
-                    className="p-6 cursor-pointer"
-                    onClick={() => toggleHolding(holding.id)}
-                  >
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        <div>
-                          <h3 className="text-lg font-semibold text-slate-900">{holding.security}</h3>
-                          <span className="badge">Active Holding</span>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <div className="text-right">
-                          <p className={`text-lg font-bold font-mono ${gainLossClass}`}>
-                            {gainLossPercent >= 0 ? '+' : ''}{gainLossPercent.toFixed(1)}%
-                          </p>
-                          <p className="text-sm text-slate-500">${currentValue.toLocaleString()}</p>
-                        </div>
-                        {isExpanded ? (
-                          <ChevronUp className="w-5 h-5 text-slate-400" />
-                        ) : (
-                          <ChevronDown className="w-5 h-5 text-slate-400" />
-                        )}
-                      </div>
+        {/* Additional Details & Performance */}
+        <div className="grid lg:grid-cols-2 gap-12">
+          {/* Additional Details */}
+          <div>
+            <h2 className="section-title mb-6">ADDITIONAL DETAILS</h2>
+            
+            {/* Current Price Data */}
+            <div className="mb-6">
+              <p className="text-gray-300 font-bold text-lg mb-3">Current Price Data</p>
+              <div className="data-table p-4 mb-4">
+                <div className="grid grid-cols-2 gap-4 text-gray-300">
+                  <div>Latest PSS:</div>
+                  <div className="text-white font-semibold">${holding.currentPrice.toFixed(2)}</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Funding Rounds */}
+            <div className="mb-6">
+              <p className="text-gray-300 font-bold text-lg mb-3">Funding Rounds (PSS)</p>
+              <div className="data-table">
+                <div className="grid grid-cols-2">
+                  {holding.fundingRounds && holding.fundingRounds.map((round, idx) => (
+                    <div key={idx} className="p-4 border-b border-black/20 flex justify-between">
+                      <span className="text-gray-300">{round.round}:</span>
+                      <span className="text-white font-semibold">${round.pss.toFixed(2)}</span>
                     </div>
-                    
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Valuation Data */}
+            <div>
+              <p className="text-gray-300 font-bold text-lg mb-3">Valuation Data</p>
+              <div className="data-table p-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-gray-300">Last Valuation:</div>
+                  <div className="text-white font-semibold">${(currentValue * 1000).toLocaleString()}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Performance Charts */}
+          <div>
+            <h2 className="section-title mb-6">PERFORMANCE</h2>
+            
+            {/* Bar Chart */}
+            <div className="mb-8">
+              <ResponsiveContainer width="100%" height={250}>
+                <BarChart data={barChartData} barCategoryGap="20%">
+                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                  <XAxis dataKey="name" stroke="#999" />
+                  <YAxis stroke="#999" />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#1a1a1a', 
+                      border: '1px solid #333',
+                      borderRadius: '8px'
+                    }}
+                  />
+                  <Legend />
+                  <Bar dataKey="Total Invested ($)" fill="#FF6B8A" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="FMV ($)" fill="#4FD1C5" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Line Chart */}
+            <div>
+              <ResponsiveContainer width="100%" height={250}>
+                <LineChart data={valuationData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                  <XAxis dataKey="year" stroke="#999" />
+                  <YAxis stroke="#999" tickFormatter={(v) => `${(v/1000).toFixed(0)}K`} />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#1a1a1a', 
+                      border: '1px solid #333',
+                      borderRadius: '8px'
+                    }}
+                    formatter={(value) => [`$${value.toLocaleString()}`, 'Valuation (M$)']}
+                  />
+                  <Legend />
+                  <Line 
+                    type="monotone" 
+                    dataKey="value" 
+                    stroke="#FF4D6D" 
+                    strokeWidth={2}
+                    dot={{ fill: '#FF4D6D', r: 4 }}
+                    name="Valuation (M$)"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+
+        {/* Multiple Holdings */}
+        {displayData.holdings.length > 1 && (
+          <div className="mt-16">
+            <h2 className="section-title mb-6">OTHER HOLDINGS</h2>
+            <div className="space-y-4">
+              {displayData.holdings.slice(1).map((h, idx) => {
+                const hCurrentValue = h.unitsHeld * h.currentPrice;
+                const hReturn = h.totalInvested > 0 ? ((hCurrentValue - h.totalInvested) / h.totalInvested * 100) : 0;
+                return (
+                  <div key={h.id || idx} className="glass-card p-6">
+                    <div className="flex justify-between items-center mb-4">
+                      <p className="security-name">{h.security}</p>
+                      <p className="text-white font-bold">{hReturn.toFixed(1)}% Return</p>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                       <div>
-                        <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">Units Held</p>
-                        <p className="text-lg font-semibold font-mono text-slate-900">{holding.unitsHeld.toLocaleString()}</p>
+                        <p className="text-gray-400">Units Held</p>
+                        <p className="text-white font-semibold">{h.unitsHeld.toLocaleString()}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">Current Price</p>
-                        <p className="text-lg font-semibold font-mono text-slate-900">${holding.currentPrice.toFixed(2)}</p>
+                        <p className="text-gray-400">Issue Price</p>
+                        <p className="text-white font-semibold">${h.issuePrice.toFixed(2)}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">Cost Basis</p>
-                        <p className="text-lg font-semibold font-mono text-slate-900">${holding.issuePrice.toFixed(2)}</p>
+                        <p className="text-gray-400">Total Invested</p>
+                        <p className="text-white font-semibold">${h.totalInvested.toLocaleString()}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">Gain/Loss</p>
-                        <p className={`text-lg font-semibold font-mono ${gainLossClass}`}>
-                          ${gainLoss.toLocaleString()}
-                        </p>
+                        <p className="text-gray-400">FMV</p>
+                        <p className="text-white font-semibold">${hCurrentValue.toLocaleString()}</p>
                       </div>
                     </div>
                   </div>
-
-                  {/* Expanded Details */}
-                  {isExpanded && (
-                    <div className="border-t border-slate-100 p-6 bg-slate-50/50">
-                      <div className="grid lg:grid-cols-2 gap-8">
-                        {/* Valuation History Chart */}
-                        {holding.valuationHistory && holding.valuationHistory.length > 0 && (
-                          <div>
-                            <h4 className="text-sm font-semibold text-slate-900 mb-4 uppercase tracking-wider">PSS Trend</h4>
-                            <ResponsiveContainer width="100%" height={200}>
-                              <LineChart data={holding.valuationHistory}>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
-                                <XAxis dataKey="year" stroke="#94a3b8" style={{ fontSize: '11px' }} />
-                                <YAxis stroke="#94a3b8" style={{ fontSize: '11px' }} />
-                                <Tooltip 
-                                  contentStyle={{
-                                    background: '#fff',
-                                    border: '1px solid #e2e8f0',
-                                    borderRadius: '8px',
-                                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)'
-                                  }}
-                                  formatter={(value) => [`$${value.toFixed(2)}`, 'PSS']}
-                                />
-                                <Line 
-                                  type="monotone" 
-                                  dataKey="value" 
-                                  stroke="#0f172a" 
-                                  strokeWidth={2}
-                                  dot={{ fill: '#0f172a', r: 3 }}
-                                  activeDot={{ r: 5 }}
-                                />
-                              </LineChart>
-                            </ResponsiveContainer>
-                          </div>
-                        )}
-
-                        {/* Funding Rounds */}
-                        {holding.fundingRounds && holding.fundingRounds.length > 0 && (
-                          <div>
-                            <h4 className="text-sm font-semibold text-slate-900 mb-4 uppercase tracking-wider">Funding Rounds</h4>
-                            <div className="space-y-3">
-                              {holding.fundingRounds.map((round, idx) => (
-                                <div key={idx} className="flex items-center justify-between py-2 border-b border-slate-200 last:border-0">
-                                  <p className="text-sm font-medium text-slate-700">{round.round}</p>
-                                  <p className="text-sm font-semibold font-mono text-slate-900">${round.pss.toFixed(2)}</p>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Footer */}
-        <div className="text-center text-slate-500 text-sm animate-slide-up stagger-4">
-          <p>Data synced from Airtable - Last updated: {new Date().toLocaleDateString()}</p>
+        <div className="mt-16 text-center text-gray-500 text-sm">
+          <p>Data synced from Airtable</p>
         </div>
       </div>
     </div>
