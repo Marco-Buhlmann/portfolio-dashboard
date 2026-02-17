@@ -137,7 +137,13 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
 
         .data-table {
           background: rgba(255, 255, 255, 0);
-          border: 1px solid rgba(0, 0, 0, 0.5);
+          border: 1px solid rgba(0, 0, 0, 0.8);
+          box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        }
+
+        .data-section-header {
+          background: rgba(0, 0, 0, 0.3);
+          border: 1px solid rgba(0, 0, 0, 0.8);
           box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
         }
 
@@ -180,39 +186,39 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
 
         {/* Main Metrics Row 1 */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-4">
-          <div>
+          <div className="text-center">
             <p className="metric-label mb-2">Units Held</p>
-            <div className="glass-card px-6 py-4 text-center">
+            <div className="glass-card px-6 py-4">
               <p className="metric-value">{holding.unitsHeld.toLocaleString()}</p>
             </div>
           </div>
-          <div>
+          <div className="text-center">
             <p className="metric-label mb-2">Issue Price Unit / ($)</p>
-            <div className="glass-card px-6 py-4 text-center">
+            <div className="glass-card px-6 py-4">
               <p className="metric-value">${holding.issuePrice.toFixed(2)}</p>
             </div>
           </div>
-          <div>
+          <div className="text-center">
             <p className="metric-label mb-2">Total Invested ($)</p>
-            <div className="glass-card px-6 py-4 text-center">
+            <div className="glass-card px-6 py-4">
               <p className="metric-value">${holding.totalInvested.toLocaleString()}</p>
             </div>
           </div>
-          <div>
+          <div className="text-center">
             <p className="metric-label mb-2">FMV ($)</p>
-            <div className="glass-card px-6 py-4 text-center">
+            <div className="glass-card px-6 py-4">
               <p className="metric-value">${currentValue.toLocaleString()}</p>
             </div>
           </div>
-          <div>
+          <div className="text-center">
             <p className="metric-label mb-2">Return (%)</p>
-            <div className="glass-card px-6 py-4 text-center">
+            <div className="glass-card px-6 py-4">
               <p className="metric-value">{returnPercent.toFixed(1)}%</p>
             </div>
           </div>
-          <div>
+          <div className="text-center">
             <p className="metric-label mb-2">Multiple</p>
-            <div className="glass-card px-6 py-4 text-center">
+            <div className="glass-card px-6 py-4">
               <p className="metric-value">{multiple}x</p>
             </div>
           </div>
@@ -220,15 +226,15 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
 
         {/* Main Metrics Row 2 */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
-          <div>
+          <div className="text-center">
             <p className="metric-label mb-2">Units Sold</p>
-            <div className="glass-card px-6 py-4 text-center">
+            <div className="glass-card px-6 py-4">
               <p className="metric-value">{holding.unitsSold || '-'}</p>
             </div>
           </div>
-          <div>
+          <div className="text-center">
             <p className="metric-label mb-2">RP ($)</p>
-            <div className="glass-card px-6 py-4 text-center">
+            <div className="glass-card px-6 py-4">
               <p className="metric-value">{holding.redemptionPrice ? `$${holding.redemptionPrice}` : '-'}</p>
             </div>
           </div>
@@ -242,22 +248,26 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
             
             {/* Current Price Data */}
             <div className="mb-6">
-              <p className="text-gray-300 font-bold text-lg mb-3">Current Price Data</p>
-              <div className="data-table p-4 mb-4">
-                <div className="grid grid-cols-2 gap-4 text-gray-300">
-                  <div>Latest PSS:</div>
-                  <div className="text-white font-semibold">${holding.currentPrice.toFixed(2)}</div>
+              <div className="data-section-header px-4 py-3 mb-0">
+                <p className="text-gray-300 font-bold">Current Price Data</p>
+              </div>
+              <div className="data-table p-4">
+                <div className="flex justify-between text-gray-300">
+                  <span>Latest PSS:</span>
+                  <span className="text-white font-semibold">${holding.currentPrice.toFixed(2)}</span>
                 </div>
               </div>
             </div>
 
             {/* Funding Rounds */}
             <div className="mb-6">
-              <p className="text-gray-300 font-bold text-lg mb-3">Funding Rounds (PSS)</p>
+              <div className="data-section-header px-4 py-3 mb-0">
+                <p className="text-gray-300 font-bold">Current Price Data</p>
+              </div>
               <div className="data-table">
                 <div className="grid grid-cols-2">
                   {holding.fundingRounds && holding.fundingRounds.map((round, idx) => (
-                    <div key={idx} className="p-4 border-b border-black/20 flex justify-between">
+                    <div key={idx} className="p-4 border border-black/40 flex justify-between">
                       <span className="text-gray-300">{round.round}:</span>
                       <span className="text-white font-semibold">${round.pss.toFixed(2)}</span>
                     </div>
@@ -268,11 +278,19 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
 
             {/* Valuation Data */}
             <div>
-              <p className="text-gray-300 font-bold text-lg mb-3">Valuation Data</p>
+              <div className="data-section-header px-4 py-3 mb-0">
+                <p className="text-gray-300 font-bold">Valuation Data</p>
+              </div>
               <div className="data-table p-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="text-gray-300">Last Valuation:</div>
-                  <div className="text-white font-semibold">${(currentValue * 1000).toLocaleString()}</div>
+                <div className="flex justify-between">
+                  <span className="text-gray-300">Last Valuation:</span>
+                  <span className="text-white font-semibold">${(currentValue * 1000).toLocaleString()}</span>
+                </div>
+              </div>
+              <div className="data-table p-4 mt-0 border-t-0">
+                <div className="flex justify-between">
+                  <span className="text-gray-300"></span>
+                  <span className="text-white font-semibold"></span>
                 </div>
               </div>
             </div>
