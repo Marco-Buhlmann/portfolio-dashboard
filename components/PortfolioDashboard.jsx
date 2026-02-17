@@ -58,17 +58,29 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
   }
 
   const displayData = data || mockData;
-  const holding = displayData.holdings[0];
-  const currentValue = holding.unitsHeld * holding.currentPrice;
-  const gainLoss = currentValue - holding.totalInvested;
-  const returnPercent = holding.totalInvested > 0 ? (gainLoss / holding.totalInvested) * 100 : 0;
-  const multiple = holding.issuePrice > 0 ? (holding.currentPrice / holding.issuePrice).toFixed(2) : 0;
+  const holding = displayData.holdings?.[0] || {};
+  
+  // Safely get values with defaults
+  const unitsHeld = holding.unitsHeld || 0;
+  const currentPrice = holding.currentPrice || 0;
+  const issuePrice = holding.issuePrice || 0;
+  const totalInvested = holding.totalInvested || 0;
+  const security = holding.security || 'Unknown';
+  const unitsSold = holding.unitsSold || null;
+  const redemptionPrice = holding.redemptionPrice || null;
+  const fundingRounds = holding.fundingRounds || [];
+  const valuationHistory = holding.valuationHistory || [];
+  
+  const currentValue = unitsHeld * currentPrice;
+  const gainLoss = currentValue - totalInvested;
+  const returnPercent = totalInvested > 0 ? (gainLoss / totalInvested) * 100 : 0;
+  const multiple = issuePrice > 0 ? (currentPrice / issuePrice).toFixed(2) : '0';
 
   const barChartData = [
-    { name: 'Investment', 'Total Invested ($)': holding.totalInvested, 'FMV ($)': currentValue }
+    { name: 'Investment', 'Total Invested ($)': totalInvested, 'FMV ($)': currentValue }
   ];
 
-  const valuationData = holding.valuationHistory || [];
+  const valuationData = valuationHistory;
 
   return (
     <div
@@ -188,7 +200,7 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
               <p className="text-gray-300 text-sm">Security:</p>
             </div>
             <div className="vertical-divider h-12"></div>
-            <p className="security-name">{holding.security}</p>
+            <p className="security-name">{security}</p>
           </div>
         </div>
 
@@ -197,19 +209,19 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
           <div className="text-center">
             <p className="metric-label mb-2">Units Held</p>
             <div className="glass-card px-6 py-4">
-              <p className="metric-value">{holding.unitsHeld.toLocaleString()}</p>
+              <p className="metric-value">{unitsHeld.toLocaleString()}</p>
             </div>
           </div>
           <div className="text-center">
             <p className="metric-label mb-2">Issue Price Unit / ($)</p>
             <div className="glass-card px-6 py-4">
-              <p className="metric-value">${holding.issuePrice.toFixed(2)}</p>
+              <p className="metric-value">${issuePrice.toFixed(2)}</p>
             </div>
           </div>
           <div className="text-center">
             <p className="metric-label mb-2">Total Invested ($)</p>
             <div className="glass-card px-6 py-4">
-              <p className="metric-value">${holding.totalInvested.toLocaleString()}</p>
+              <p className="metric-value">${totalInvested.toLocaleString()}</p>
             </div>
           </div>
           <div className="text-center">
@@ -237,13 +249,13 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
           <div className="text-center">
             <p className="metric-label mb-2">Units Sold</p>
             <div className="glass-card px-6 py-4">
-              <p className="metric-value">{holding.unitsSold || '-'}</p>
+              <p className="metric-value">{unitsSold || '-'}</p>
             </div>
           </div>
           <div className="text-center">
             <p className="metric-label mb-2">RP ($)</p>
             <div className="glass-card px-6 py-4">
-              <p className="metric-value">{holding.redemptionPrice ? `$${holding.redemptionPrice}` : '-'}</p>
+              <p className="metric-value">{redemptionPrice ? `$${redemptionPrice}` : '-'}</p>
             </div>
           </div>
         </div>
@@ -262,7 +274,7 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
               <div className="data-table p-4">
                 <div className="flex justify-between text-gray-300">
                   <span>Latest PSS:</span>
-                  <span className="text-white font-semibold">${holding.currentPrice.toFixed(2)}</span>
+                  <span className="text-white font-semibold">${currentPrice.toFixed(2)}</span>
                 </div>
               </div>
             </div>
@@ -273,10 +285,10 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
                 <p className="text-gray-300 font-bold">PSS ($) By Funding Round</p>
               </div>
               <div className="grid grid-cols-1">
-                {holding.fundingRounds && holding.fundingRounds.map((round, idx) => (
+                {fundingRounds.map((round, idx) => (
                   <div key={idx} className="data-grid-cell p-4 flex justify-between">
                     <span className="text-gray-300">- {round.round}</span>
-                    <span className="text-white font-semibold">${round.pss.toFixed(2)}</span>
+                    <span className="text-white font-semibold">${(round.pss || 0).toFixed(2)}</span>
                   </div>
                 ))}
               </div>
