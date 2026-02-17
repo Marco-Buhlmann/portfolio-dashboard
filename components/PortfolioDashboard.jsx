@@ -136,15 +136,23 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
         }
 
         .data-table {
-          background: rgba(255, 255, 255, 0);
-          border: 1px solid rgba(0, 0, 0, 0.8);
+          background: rgba(255, 255, 255, 0.08);
+          backdrop-filter: blur(12px);
+          border: 1px solid #B3DEB2;
           box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
         }
 
         .data-section-header {
-          background: rgba(0, 0, 0, 0.3);
-          border: 1px solid rgba(0, 0, 0, 0.8);
-          box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+          background: rgba(255, 255, 255, 0.05);
+          backdrop-filter: blur(12px);
+          border: 1px solid #B3DEB2;
+          border-bottom: none;
+        }
+
+        .data-grid-cell {
+          background: rgba(255, 255, 255, 0.08);
+          backdrop-filter: blur(12px);
+          border: 1px solid #B3DEB2;
         }
 
         .divider {
@@ -261,24 +269,22 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
 
             {/* Funding Rounds */}
             <div className="mb-6">
-              <div className="data-section-header px-4 py-3 mb-0">
+              <div className="data-section-header px-4 py-3">
                 <p className="text-gray-300 font-bold">Current Price Data</p>
               </div>
-              <div className="data-table">
-                <div className="grid grid-cols-2">
-                  {holding.fundingRounds && holding.fundingRounds.map((round, idx) => (
-                    <div key={idx} className="p-4 border border-black/40 flex justify-between">
-                      <span className="text-gray-300">{round.round}:</span>
-                      <span className="text-white font-semibold">${round.pss.toFixed(2)}</span>
-                    </div>
-                  ))}
-                </div>
+              <div className="grid grid-cols-2">
+                {holding.fundingRounds && holding.fundingRounds.map((round, idx) => (
+                  <div key={idx} className="data-grid-cell p-4 flex justify-between">
+                    <span className="text-gray-300">{round.round}:</span>
+                    <span className="text-white font-semibold">${round.pss.toFixed(2)}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
             {/* Valuation Data */}
             <div>
-              <div className="data-section-header px-4 py-3 mb-0">
+              <div className="data-section-header px-4 py-3">
                 <p className="text-gray-300 font-bold">Valuation Data</p>
               </div>
               <div className="data-table p-4">
@@ -287,10 +293,9 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
                   <span className="text-white font-semibold">${(currentValue * 1000).toLocaleString()}</span>
                 </div>
               </div>
-              <div className="data-table p-4 mt-0 border-t-0">
+              <div className="data-table p-4" style={{ borderTop: 'none' }}>
                 <div className="flex justify-between">
-                  <span className="text-gray-300"></span>
-                  <span className="text-white font-semibold"></span>
+                  <span className="text-gray-300">&nbsp;</span>
                 </div>
               </div>
             </div>
