@@ -126,21 +126,31 @@ const AdminDashboard = () => {
 
   if (!authenticated) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
-        <div className="bg-gray-800 p-8 rounded-lg shadow-xl max-w-md w-full">
-          <h1 className="text-2xl font-bold text-white mb-6 text-center">Admin Login</h1>
+      <div className="min-h-screen bg-black flex items-center justify-center p-4" style={{
+        backgroundImage: 'url(/palm-noir.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}>
+        <div className="p-8 rounded-2xl shadow-xl max-w-md w-full" style={{
+          background: 'rgba(255, 255, 255, 0.08)',
+          backdropFilter: 'blur(12px)',
+          border: '1px solid #B3DEB2',
+        }}>
+          <h1 className="text-2xl font-bold text-white mb-6 text-center" style={{ color: '#B3DEB2' }}>Admin Login</h1>
           <form onSubmit={handleLogin}>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter password"
-              className="w-full p-3 rounded bg-gray-700 text-white border border-gray-600 focus:border-green-500 focus:outline-none mb-4"
+              className="w-full p-3 rounded-lg bg-black/50 text-white border focus:outline-none mb-4"
+              style={{ borderColor: '#B3DEB2' }}
             />
             {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
             <button
               type="submit"
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded transition"
+              className="w-full text-black font-bold py-3 px-4 rounded-lg transition hover:opacity-90"
+              style={{ backgroundColor: '#B3DEB2' }}
             >
               Login
             </button>
@@ -151,7 +161,13 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
+    <div className="min-h-screen text-white p-6" style={{
+      backgroundImage: 'url(/palm-noir.jpg)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed',
+      backgroundColor: 'black',
+    }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
         * { font-family: 'Open Sans', sans-serif; }
@@ -159,17 +175,19 @@ const AdminDashboard = () => {
 
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-green-400">Portfolio Admin</h1>
+          <h1 className="text-3xl font-bold" style={{ color: '#B3DEB2' }}>Portfolio Admin</h1>
           <div className="flex gap-4">
             <button
               onClick={() => { resetForm(); setShowForm(true); }}
-              className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition"
+              className="text-black font-bold py-2 px-4 rounded-lg transition hover:opacity-90"
+              style={{ backgroundColor: '#B3DEB2' }}
             >
               + New Record
             </button>
             <button
               onClick={loadRecords}
-              className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition"
+              className="font-bold py-2 px-4 rounded-lg transition hover:opacity-90"
+              style={{ backgroundColor: 'rgba(255,255,255,0.1)', border: '1px solid #B3DEB2' }}
             >
               Refresh
             </button>
@@ -177,16 +195,20 @@ const AdminDashboard = () => {
         </div>
 
         {error && (
-          <div className="bg-red-900/50 border border-red-500 text-red-300 p-4 rounded mb-6">
-            {error}
+          <div className="p-4 rounded-lg mb-6" style={{ backgroundColor: 'rgba(255,0,0,0.1)', border: '1px solid #ff6b6b' }}>
+            <span className="text-red-300">{error}</span>
           </div>
         )}
 
         {/* Form Modal */}
         {showForm && (
-          <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
-            <div className="bg-gray-800 p-6 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-              <h2 className="text-xl font-bold text-green-400 mb-4">
+          <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
+            <div className="p-6 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" style={{
+              background: 'rgba(30, 30, 30, 0.95)',
+              backdropFilter: 'blur(12px)',
+              border: '1px solid #B3DEB2',
+            }}>
+              <h2 className="text-xl font-bold mb-4" style={{ color: '#B3DEB2' }}>
                 {editingRecord ? 'Edit Record' : 'New Record'}
               </h2>
               <form onSubmit={handleSubmit}>
@@ -199,7 +221,8 @@ const AdminDashboard = () => {
                       value={formData.investorName}
                       onChange={handleInputChange}
                       required
-                      className="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-green-500 focus:outline-none"
+                      className="w-full p-2 rounded-lg bg-black/50 text-white border focus:outline-none"
+                      style={{ borderColor: 'rgba(179, 222, 178, 0.5)' }}
                     />
                   </div>
                   <div>
@@ -210,7 +233,8 @@ const AdminDashboard = () => {
                       value={formData.security}
                       onChange={handleInputChange}
                       required
-                      className="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-green-500 focus:outline-none"
+                      className="w-full p-2 rounded-lg bg-black/50 text-white border focus:outline-none"
+                      style={{ borderColor: 'rgba(179, 222, 178, 0.5)' }}
                     />
                   </div>
                   <div>
@@ -221,7 +245,8 @@ const AdminDashboard = () => {
                       value={formData.unitsHeld}
                       onChange={handleInputChange}
                       step="0.01"
-                      className="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-green-500 focus:outline-none"
+                      className="w-full p-2 rounded-lg bg-black/50 text-white border focus:outline-none"
+                      style={{ borderColor: 'rgba(179, 222, 178, 0.5)' }}
                     />
                   </div>
                   <div>
@@ -232,7 +257,8 @@ const AdminDashboard = () => {
                       value={formData.issuePrice}
                       onChange={handleInputChange}
                       step="0.01"
-                      className="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-green-500 focus:outline-none"
+                      className="w-full p-2 rounded-lg bg-black/50 text-white border focus:outline-none"
+                      style={{ borderColor: 'rgba(179, 222, 178, 0.5)' }}
                     />
                   </div>
                   <div>
@@ -243,7 +269,8 @@ const AdminDashboard = () => {
                       value={formData.totalInvested}
                       onChange={handleInputChange}
                       step="0.01"
-                      className="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-green-500 focus:outline-none"
+                      className="w-full p-2 rounded-lg bg-black/50 text-white border focus:outline-none"
+                      style={{ borderColor: 'rgba(179, 222, 178, 0.5)' }}
                     />
                   </div>
                   <div>
@@ -254,7 +281,8 @@ const AdminDashboard = () => {
                       value={formData.latestPSS}
                       onChange={handleInputChange}
                       step="0.01"
-                      className="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-green-500 focus:outline-none"
+                      className="w-full p-2 rounded-lg bg-black/50 text-white border focus:outline-none"
+                      style={{ borderColor: 'rgba(179, 222, 178, 0.5)' }}
                     />
                   </div>
                   <div>
@@ -264,7 +292,8 @@ const AdminDashboard = () => {
                       name="unitsSold"
                       value={formData.unitsSold}
                       onChange={handleInputChange}
-                      className="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-green-500 focus:outline-none"
+                      className="w-full p-2 rounded-lg bg-black/50 text-white border focus:outline-none"
+                      style={{ borderColor: 'rgba(179, 222, 178, 0.5)' }}
                     />
                   </div>
                   <div>
@@ -275,7 +304,8 @@ const AdminDashboard = () => {
                       value={formData.redemptionPrice}
                       onChange={handleInputChange}
                       step="0.01"
-                      className="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-green-500 focus:outline-none"
+                      className="w-full p-2 rounded-lg bg-black/50 text-white border focus:outline-none"
+                      style={{ borderColor: 'rgba(179, 222, 178, 0.5)' }}
                     />
                   </div>
                   <div>
@@ -286,7 +316,8 @@ const AdminDashboard = () => {
                       value={formData.lastValuation}
                       onChange={handleInputChange}
                       step="0.01"
-                      className="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-green-500 focus:outline-none"
+                      className="w-full p-2 rounded-lg bg-black/50 text-white border focus:outline-none"
+                      style={{ borderColor: 'rgba(179, 222, 178, 0.5)' }}
                     />
                   </div>
                   <div>
@@ -296,7 +327,8 @@ const AdminDashboard = () => {
                       name="sharesOutstanding"
                       value={formData.sharesOutstanding}
                       onChange={handleInputChange}
-                      className="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-green-500 focus:outline-none"
+                      className="w-full p-2 rounded-lg bg-black/50 text-white border focus:outline-none"
+                      style={{ borderColor: 'rgba(179, 222, 178, 0.5)' }}
                     />
                   </div>
                   <div className="col-span-2">
@@ -309,7 +341,8 @@ const AdminDashboard = () => {
                       value={formData.valuationHistory}
                       onChange={handleInputChange}
                       placeholder="2023: 10, 2024: 15, 2025: 25"
-                      className="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-green-500 focus:outline-none"
+                      className="w-full p-2 rounded-lg bg-black/50 text-white border focus:outline-none"
+                      style={{ borderColor: 'rgba(179, 222, 178, 0.5)' }}
                     />
                   </div>
                   <div className="col-span-2">
@@ -322,7 +355,8 @@ const AdminDashboard = () => {
                       value={formData.fundingRounds}
                       onChange={handleInputChange}
                       placeholder="Seed: 0.55, Seed-1: 1.5, Seed-2: 2.22"
-                      className="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-green-500 focus:outline-none"
+                      className="w-full p-2 rounded-lg bg-black/50 text-white border focus:outline-none"
+                      style={{ borderColor: 'rgba(179, 222, 178, 0.5)' }}
                     />
                   </div>
                 </div>
@@ -330,14 +364,16 @@ const AdminDashboard = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white font-bold py-2 px-4 rounded transition"
+                    className="flex-1 text-black font-bold py-2 px-4 rounded-lg transition hover:opacity-90 disabled:opacity-50"
+                    style={{ backgroundColor: '#B3DEB2' }}
                   >
                     {loading ? 'Saving...' : (editingRecord ? 'Update' : 'Create')}
                   </button>
                   <button
                     type="button"
                     onClick={resetForm}
-                    className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition"
+                    className="flex-1 font-bold py-2 px-4 rounded-lg transition hover:opacity-90"
+                    style={{ backgroundColor: 'rgba(255,255,255,0.1)', border: '1px solid rgba(179, 222, 178, 0.5)' }}
                   >
                     Cancel
                   </button>
@@ -350,42 +386,44 @@ const AdminDashboard = () => {
         {/* Records Table */}
         {loading && !showForm ? (
           <div className="text-center py-12">
-            <div className="w-12 h-12 border-2 border-gray-600 border-t-green-500 rounded-full animate-spin mx-auto"></div>
+            <div className="w-12 h-12 border-2 border-gray-600 rounded-full animate-spin mx-auto" style={{ borderTopColor: '#B3DEB2' }}></div>
             <p className="text-gray-400 mt-4">Loading records...</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto rounded-xl" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid #B3DEB2' }}>
             <table className="w-full border-collapse">
               <thead>
-                <tr className="bg-gray-800 text-left">
-                  <th className="p-3 border border-gray-700 text-green-400">Investor</th>
-                  <th className="p-3 border border-gray-700 text-green-400">Security</th>
-                  <th className="p-3 border border-gray-700 text-green-400">Units</th>
-                  <th className="p-3 border border-gray-700 text-green-400">Issue Price</th>
-                  <th className="p-3 border border-gray-700 text-green-400">Invested</th>
-                  <th className="p-3 border border-gray-700 text-green-400">Latest PSS</th>
-                  <th className="p-3 border border-gray-700 text-green-400">Actions</th>
+                <tr style={{ background: 'rgba(179, 222, 178, 0.1)' }}>
+                  <th className="p-3 text-left" style={{ color: '#B3DEB2', borderBottom: '1px solid rgba(179, 222, 178, 0.3)' }}>Investor</th>
+                  <th className="p-3 text-left" style={{ color: '#B3DEB2', borderBottom: '1px solid rgba(179, 222, 178, 0.3)' }}>Security</th>
+                  <th className="p-3 text-left" style={{ color: '#B3DEB2', borderBottom: '1px solid rgba(179, 222, 178, 0.3)' }}>Units</th>
+                  <th className="p-3 text-left" style={{ color: '#B3DEB2', borderBottom: '1px solid rgba(179, 222, 178, 0.3)' }}>Issue Price</th>
+                  <th className="p-3 text-left" style={{ color: '#B3DEB2', borderBottom: '1px solid rgba(179, 222, 178, 0.3)' }}>Invested</th>
+                  <th className="p-3 text-left" style={{ color: '#B3DEB2', borderBottom: '1px solid rgba(179, 222, 178, 0.3)' }}>Latest PSS</th>
+                  <th className="p-3 text-left" style={{ color: '#B3DEB2', borderBottom: '1px solid rgba(179, 222, 178, 0.3)' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {records.map((record) => (
-                  <tr key={record.id} className="hover:bg-gray-800/50">
-                    <td className="p-3 border border-gray-700">{record.investorName}</td>
-                    <td className="p-3 border border-gray-700">{record.security}</td>
-                    <td className="p-3 border border-gray-700">{record.unitsHeld.toLocaleString()}</td>
-                    <td className="p-3 border border-gray-700">${record.issuePrice}</td>
-                    <td className="p-3 border border-gray-700">${record.totalInvested.toLocaleString()}</td>
-                    <td className="p-3 border border-gray-700">${record.latestPSS}</td>
-                    <td className="p-3 border border-gray-700">
+                  <tr key={record.id} className="hover:bg-white/5">
+                    <td className="p-3" style={{ borderBottom: '1px solid rgba(179, 222, 178, 0.2)' }}>{record.investorName}</td>
+                    <td className="p-3" style={{ borderBottom: '1px solid rgba(179, 222, 178, 0.2)' }}>{record.security}</td>
+                    <td className="p-3" style={{ borderBottom: '1px solid rgba(179, 222, 178, 0.2)' }}>{record.unitsHeld.toLocaleString()}</td>
+                    <td className="p-3" style={{ borderBottom: '1px solid rgba(179, 222, 178, 0.2)' }}>${record.issuePrice}</td>
+                    <td className="p-3" style={{ borderBottom: '1px solid rgba(179, 222, 178, 0.2)' }}>${record.totalInvested.toLocaleString()}</td>
+                    <td className="p-3" style={{ borderBottom: '1px solid rgba(179, 222, 178, 0.2)' }}>${record.latestPSS}</td>
+                    <td className="p-3" style={{ borderBottom: '1px solid rgba(179, 222, 178, 0.2)' }}>
                       <button
                         onClick={() => handleEdit(record)}
-                        className="bg-blue-600 hover:bg-blue-700 text-white text-sm py-1 px-3 rounded mr-2 transition"
+                        className="text-white text-sm py-1 px-3 rounded-lg mr-2 transition hover:opacity-80"
+                        style={{ backgroundColor: 'rgba(179, 222, 178, 0.3)', border: '1px solid #B3DEB2' }}
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => handleDelete(record.id)}
-                        className="bg-red-600 hover:bg-red-700 text-white text-sm py-1 px-3 rounded transition"
+                        className="text-white text-sm py-1 px-3 rounded-lg transition hover:opacity-80"
+                        style={{ backgroundColor: 'rgba(254, 12, 127, 0.3)', border: '1px solid #FE0C7F' }}
                       >
                         Delete
                       </button>
@@ -405,8 +443,8 @@ const AdminDashboard = () => {
         )}
 
         {/* Quick Links */}
-        <div className="mt-8 p-4 bg-gray-800 rounded-lg">
-          <h3 className="text-lg font-semibold text-green-400 mb-2">Quick Links</h3>
+        <div className="mt-8 p-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid #B3DEB2' }}>
+          <h3 className="text-lg font-semibold mb-2" style={{ color: '#B3DEB2' }}>Quick Links</h3>
           <p className="text-gray-400 text-sm mb-2">View investor dashboards:</p>
           <div className="flex flex-wrap gap-2">
             {[...new Set(records.map(r => r.investorName))].filter(Boolean).map((name) => (
@@ -415,7 +453,8 @@ const AdminDashboard = () => {
                 href={`/${encodeURIComponent(name)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-gray-700 hover:bg-gray-600 text-white text-sm py-1 px-3 rounded transition"
+                className="text-white text-sm py-1 px-3 rounded-lg transition hover:opacity-80"
+                style={{ backgroundColor: 'rgba(179, 222, 178, 0.2)', border: '1px solid rgba(179, 222, 178, 0.5)' }}
               >
                 {name}
               </a>
