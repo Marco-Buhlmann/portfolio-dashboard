@@ -73,11 +73,11 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
   const valuationHistory = holding.valuationHistory || [];
   
   const currentValue = unitsHeld * currentPrice;
-  const redemptionValue = unitsSold * (redemptionPrice || 0);
-  const totalValue = currentValue + redemptionValue;
+  const saleProceeds = unitsSold * (redemptionPrice || 0);
+  const totalValue = currentValue + saleProceeds;
   const gainLoss = totalValue - totalInvested;
   const returnPercent = totalInvested > 0 ? (gainLoss / totalInvested) * 100 : 0;
-  const multiple = issuePrice > 0 ? (currentPrice / issuePrice).toFixed(2) : '0';
+  const multiple = totalInvested > 0 ? (totalValue / totalInvested).toFixed(2) : '0';
 
   const barChartData = [
     { name: 'Investment', 'Total Invested ($)': totalInvested, 'FMV ($)': currentValue }
@@ -264,7 +264,13 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
           <div className="text-center">
             <p className="metric-label mb-2">RP ($)</p>
             <div className="glass-card px-6 py-4">
-              <p className="metric-value">{redemptionPrice ? `$${redemptionPrice}` : '-'}</p>
+              <p className="metric-value">{redemptionPrice ? `$${redemptionPrice.toFixed(2)}` : '-'}</p>
+            </div>
+          </div>
+          <div className="text-center">
+            <p className="metric-label mb-2">Sale Proceeds ($)</p>
+            <div className="glass-card px-6 py-4">
+              <p className="metric-value">{saleProceeds > 0 ? `$${saleProceeds.toLocaleString()}` : '-'}</p>
             </div>
           </div>
         </div>
