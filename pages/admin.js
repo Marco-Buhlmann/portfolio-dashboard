@@ -13,6 +13,11 @@ const AdminDashboard = () => {
   const [editingRecord, setEditingRecord] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [copiedId, setCopiedId] = useState(null);
+  const [showDocCenterModal, setShowDocCenterModal] = useState(false);
+  const [docCenterInvestor, setDocCenterInvestor] = useState('');
+  const [docCenterFolderId, setDocCenterFolderId] = useState('');
+  const [docCenterCreating, setDocCenterCreating] = useState(false);
+  const [docCenterResult, setDocCenterResult] = useState(null);
   const [formData, setFormData] = useState({
     investorName: '',
     security: '',
@@ -135,6 +140,54 @@ const AdminDashboard = () => {
     });
   };
 
+  const openDocCenterModal = (investorName) => {
+    setDocCenterInvestor(investorName);
+    setDocCenterFolderId('');
+    setDocCenterResult(null);
+    setShowDocCenterModal(true);
+  };
+
+  const handleDocCenterCreate = async () => {
+    if (!docCenterFolderId) {
+      setError('Google Drive Folder ID is required');
+      return;
+    }
+
+    setDocCenterCreating(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/create-doc-center', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          investorName: docCenterInvestor,
+          folderId: docCenterFolderId,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to create document center');
+      }
+
+      setDocCenterResult(result);
+    } catch (err) {
+      setError(err.message);
+    }
+
+    setDocCenterCreating(false);
+  };
+
+  const copyDocCenterEmbed = () => {
+    if (docCenterResult?.embedCode) {
+      navigator.clipboard.writeText(docCenterResult.embedCode);
+      setCopiedId('docCenter');
+      setTimeout(() => setCopiedId(null), 2000);
+    }
+  };
+
   if (!authenticated) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center p-4" style={{
@@ -208,6 +261,87 @@ const AdminDashboard = () => {
         {error && (
           <div className="p-4 rounded-lg mb-6" style={{ backgroundColor: 'rgba(255,0,0,0.1)', border: '1px solid #ff6b6b' }}>
             <span className="text-red-300">{error}</span>
+          </div>
+        )}
+
+        {/* Document Center Modal */}
+        {showDocCenterModal && (
+          <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
+            <div className="p-6 rounded-2xl max-w-lg w-full" style={{
+              background: 'rgba(30, 30, 30, 0.95)',
+              backdropFilter: 'blur(12px)',
+              border: '1px solid #B3DEB2',
+            }}>
+              <h2 className="text-xl font-bold mb-4" style={{ color: '#B3DEB2' }}>
+                Create Document Center for {docCenterInvestor}
+              </h2>
+              
+              {!docCenterResult ? (
+                <>
+                  <div className="mb-4">
+                    <label className="block text-gray-400 text-sm mb-1">Google Drive Folder ID *</label>
+                    <input
+                      type="text"
+                      value={docCenterFolderId}
+                      onChange={(e) => setDocCenterFolderId(e.target.value)}
+                      placeholder="1ABC...xyz"
+                      className="w-full p-2 rounded-lg bg-black/50 text-white border focus:outline-none text-sm"
+                      style={{ borderColor: 'rgba(179, 222, 178, 0.5)' }}
+                    />
+                    <p className="text-gray-500 text-xs mt-1">Find this in the Google Drive folder URL after /folders/</p>
+                  </div>
+                  <div className="flex gap-4">
+                    <button
+                      onClick={handleDocCenterCreate}
+                      disabled={docCenterCreating}
+                      className="flex-1 text-black font-bold py-2 px-4 rounded-lg transition hover:opacity-90 disabled:opacity-50"
+                      style={{ backgroundColor: '#B3DEB2' }}
+                    >
+                      {docCenterCreating ? 'Creating...' : 'Create Document Center'}
+                    </button>
+                    <button
+                      onClick={() => setShowDocCenterModal(false)}
+                      className="flex-1 font-bold py-2 px-4 rounded-lg transition hover:opacity-90"
+                      style={{ backgroundColor: 'rgba(255,255,255,0.1)', border: '1px solid rgba(179, 222, 178, 0.5)' }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="p-4 rounded-lg mb-4" style={{ backgroundColor: 'rgba(179, 222, 178, 0.1)', border: '1px solid #B3DEB2' }}>
+                    <p className="text-green-300 font-semibold mb-2">Document Center Created!</p>
+                    <p className="text-gray-300 text-sm mb-2">URL: <a href={docCenterResult.url} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">{docCenterResult.url}</a></p>
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-gray-400 text-sm mb-1">Embed Code for Squarespace:</label>
+                    <textarea
+                      readOnly
+                      value={docCenterResult.embedCode}
+                      className="w-full p-2 rounded-lg bg-black/50 text-white border focus:outline-none text-xs font-mono"
+                      style={{ borderColor: 'rgba(179, 222, 178, 0.5)', height: '100px' }}
+                    />
+                  </div>
+                  <div className="flex gap-4">
+                    <button
+                      onClick={copyDocCenterEmbed}
+                      className="flex-1 text-black font-bold py-2 px-4 rounded-lg transition hover:opacity-90"
+                      style={{ backgroundColor: '#B3DEB2' }}
+                    >
+                      {copiedId === 'docCenter' ? 'Copied!' : 'Copy Embed Code'}
+                    </button>
+                    <button
+                      onClick={() => setShowDocCenterModal(false)}
+                      className="flex-1 font-bold py-2 px-4 rounded-lg transition hover:opacity-90"
+                      style={{ backgroundColor: 'rgba(255,255,255,0.1)', border: '1px solid rgba(179, 222, 178, 0.5)' }}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         )}
 
@@ -462,20 +596,29 @@ const AdminDashboard = () => {
 
         {/* Quick Links */}
         <div className="mt-8 p-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid #B3DEB2' }}>
-          <h3 className="text-lg font-semibold mb-2" style={{ color: '#B3DEB2' }}>Quick Links</h3>
-          <p className="text-gray-400 text-sm mb-2">View investor dashboards:</p>
-          <div className="flex flex-wrap gap-2">
+          <h3 className="text-lg font-semibold mb-2" style={{ color: '#B3DEB2' }}>Investor Accounts</h3>
+          <p className="text-gray-400 text-sm mb-2">Manage investor dashboards and document centers:</p>
+          <div className="flex flex-wrap gap-3">
             {[...new Set(records.map(r => r.investorName))].filter(Boolean).map((name) => (
-              <a
-                key={name}
-                href={`/${encodeURIComponent(name)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white text-sm py-1 px-3 rounded-lg transition hover:opacity-80"
-                style={{ backgroundColor: 'rgba(179, 222, 178, 0.2)', border: '1px solid rgba(179, 222, 178, 0.5)' }}
-              >
-                {name}
-              </a>
+              <div key={name} className="flex items-center gap-1 p-2 rounded-lg" style={{ backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(179, 222, 178, 0.3)' }}>
+                <span className="text-white text-sm px-2">{name}</span>
+                <a
+                  href={`/${encodeURIComponent(name)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white text-xs py-1 px-2 rounded transition hover:opacity-80"
+                  style={{ backgroundColor: 'rgba(179, 222, 178, 0.3)', border: '1px solid #B3DEB2' }}
+                >
+                  View
+                </a>
+                <button
+                  onClick={() => openDocCenterModal(name)}
+                  className="text-white text-xs py-1 px-2 rounded transition hover:opacity-80"
+                  style={{ backgroundColor: 'rgba(255, 165, 0, 0.3)', border: '1px solid #FFA500' }}
+                >
+                  + Doc Center
+                </button>
+              </div>
             ))}
           </div>
         </div>
