@@ -270,7 +270,7 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
           <div className="text-center">
             <p className="metric-label mb-2">Sale Proceeds ($)</p>
             <div className="glass-card px-6 py-4">
-              <p className="metric-value">{saleProceeds > 0 ? `$${saleProceeds.toLocaleString()}` : '-'}</p>
+              <p className="metric-value" style={{ color: saleProceeds > 0 ? '#B3DEB2' : undefined }}>{saleProceeds > 0 ? `$${saleProceeds.toLocaleString()}` : '-'}</p>
             </div>
           </div>
         </div>
