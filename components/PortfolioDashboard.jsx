@@ -334,23 +334,30 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
 
             {/* Bar Chart */}
             <div className="mb-8">
-              <ResponsiveContainer width="100%" height={250}>
-                <BarChart data={barChartData} barCategoryGap="20%">
-                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                  <XAxis dataKey="name" stroke="#999" />
-                  <YAxis stroke="#999" />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: '#1a1a1a',
-                      border: '1px solid #333',
-                      borderRadius: '8px'
-                    }}
-                  />
-                  <Legend />
-                  <Bar dataKey="Total Invested ($)" fill="#FF6B8A" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="FMV ($)" fill="#4FD1C5" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
+              {unitsHeld > 0 ? (
+                <ResponsiveContainer width="100%" height={250}>
+                  <BarChart data={barChartData} barCategoryGap="20%">
+                    <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                    <XAxis dataKey="name" stroke="#999" />
+                    <YAxis stroke="#999" />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: '#1a1a1a',
+                        border: '1px solid #333',
+                        borderRadius: '8px'
+                      }}
+                    />
+                    <Legend />
+                    <Bar dataKey="Total Invested ($)" fill="#FF6B8A" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="FMV ($)" fill="#4FD1C5" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="glass-card p-8 text-center">
+                  <p className="text-gray-400 text-lg">No holdings detected</p>
+                  <p className="text-gray-500 text-sm mt-2">All shares have been sold</p>
+                </div>
+              )}
             </div>
 
             {/* Line Chart */}
