@@ -42,7 +42,7 @@ export async function getStaticProps({ params }) {
         initialData: data,
         investorName,
       },
-      revalidate: 3600, // Revalidate every hour
+      revalidate: 60, // Revalidate every 60 seconds
     };
   } catch (error) {
     console.error('Failed to fetch portfolio data:', error);
@@ -51,7 +51,7 @@ export async function getStaticProps({ params }) {
         initialData: null,
         investorName,
       },
-      revalidate: 300,
+      revalidate: 60,
     };
   }
 }

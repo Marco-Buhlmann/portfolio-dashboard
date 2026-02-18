@@ -10,13 +10,13 @@ export async function getStaticProps() {
     const data = await fetchPortfolioData();
     return {
       props: { initialData: data },
-      revalidate: 3600,
+      revalidate: 60,
     };
   } catch (error) {
     console.error('Failed to fetch portfolio data:', error);
     return {
       props: { initialData: null },
-      revalidate: 300,
+      revalidate: 60,
     };
   }
 }
