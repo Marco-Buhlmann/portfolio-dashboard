@@ -61,12 +61,13 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
   const holding = displayData.holdings?.[0] || {};
   
   // Safely get values with defaults
-  const unitsHeld = holding.unitsHeld || 0;
+  const unitsHeldOriginal = holding.unitsHeld || 0;
+  const unitsSold = parseFloat(holding.unitsSold) || 0;
+  const unitsHeld = unitsHeldOriginal - unitsSold;
   const currentPrice = holding.currentPrice || 0;
   const issuePrice = holding.issuePrice || 0;
   const totalInvested = holding.totalInvested || 0;
   const security = holding.security || 'Unknown';
-  const unitsSold = holding.unitsSold || null;
   const redemptionPrice = holding.redemptionPrice || null;
   const fundingRounds = holding.fundingRounds || [];
   const valuationHistory = holding.valuationHistory || [];
@@ -255,7 +256,7 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
           <div className="text-center">
             <p className="metric-label mb-2">Units Sold</p>
             <div className="glass-card px-6 py-4">
-              <p className="metric-value">{unitsSold || '-'}</p>
+              <p className="metric-value">{unitsSold > 0 ? unitsSold.toLocaleString() : '-'}</p>
             </div>
           </div>
           <div className="text-center">
