@@ -73,7 +73,9 @@ const PortfolioDashboard = ({ initialData, investorName }) => {
   const valuationHistory = holding.valuationHistory || [];
   
   const currentValue = unitsHeld * currentPrice;
-  const gainLoss = currentValue - totalInvested;
+  const redemptionValue = unitsSold * (redemptionPrice || 0);
+  const totalValue = currentValue + redemptionValue;
+  const gainLoss = totalValue - totalInvested;
   const returnPercent = totalInvested > 0 ? (gainLoss / totalInvested) * 100 : 0;
   const multiple = issuePrice > 0 ? (currentPrice / issuePrice).toFixed(2) : '0';
 
